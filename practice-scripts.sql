@@ -161,6 +161,213 @@ SELECT
 *
 FROM persons;
 
+ALTER TABLE persons
+DROP COLUMN phone_number;
+
+ALTER TABLE persons
+ADD email VARCHAR(50) NOT NULL;
+
+
+DROP TABLE persons;
+
+-- DML Commands -- 
+SELECT * FROM customers;
+
+INSERT INTO customers(id, first_name, country, score)
+VALUES(6, "Sam", "USA", null),
+	(7, "Ron", null, null);
+    
+INSERT INTO customers(id, first_name, country, score)
+VALUES(8, "Ram", "India", 900),
+	(9, "Illa", "France", 300);
+
+
+CREATE TABLE persons (
+id INT PRIMARY KEY,
+person_name VARCHAR(50) NOT NULL,
+birth_date DATE,
+phone_number VARCHAR(15)
+);
+
+INSERT INTO persons(id, person_name, birth_date, phone_number)
+SELECT 
+id,
+first_name,
+null,
+"UNKNOWN"
+FROM customers;
+
+select * from customers where id = 9;
+
+UPDATE customers
+SET score = 0
+WHERE id = 6;
+
+UPDATE customers
+SET score = 0, country = "UK"
+WHERE id = 9;
+
+UPDATE customers
+SET score = 0
+WHERE score is null;
+
+-- DELETE -- 
+select * from persons;
+
+DELETE FROM persons
+where id > 5;
+
+DELETE FROM customers
+WHERE id > 5;
+
+SELECT * FROM persons;
+
+TRUNCATE TABLE persons;
+
+
+-- QUESTIONS -- 
+
+-- Show all customers whose first_name starts with the letter “A”.-- 
+SELECT 
+*
+FROM customers
+WHERE first_name like "a%";
+
+-- List the 5 most recent orders, sorted by order_date descending.-- 
+SELECT 
+	order_id, 
+	customer_id,
+	order_date
+FROM orders
+ORDER BY order_date DESC
+LIMIT 5;
+
+
+-- Show all customers from Germany.-- 
+SELECT 
+	*
+FROM customers
+WHERE country like "Germany";
+
+
+-- Show customers with a score greater than 400, sorted from highest to lowest.-- 
+SELECT 
+	*
+FROM customers
+WHERE score > 400
+ORDER BY score DESC;
+
+-- Find the customer with the highest score (use ORDER BY and LIMIT).-- 
+SELECT 
+	first_name,
+	score
+FROM customers
+ORDER BY score DESC
+LIMIT 1;
+
+-- Count how many customers there are in each country.-- 
+SELECT 
+	country,
+	COUNT(id) as total_customers
+FROM customers
+GROUP BY country;
+
+-- Find the average score per country, but only for countries where the average is above 400.-- 
+SELECT 
+	country,
+	AVG(score) as avg_score
+FROM customers
+GROUP BY country
+HAVING avg(score) > 400;
+
+-- Show customers whose first_name starts with “M”.-- 
+SELECT 
+	first_name
+FROM customers
+WHERE first_name like "m%";
+
+-- Show customers whose score is not 0, and add a column score_after_bonus that adds 50 to the score (this practices aliases).
+SELECT 
+	*,
+    (score + 50) as score_after_bonus
+FROM customers
+WHERE score != 0;
+
+-- Show orders placed between 2021-03-01 and 2021-07-31.
+SELECT 
+*
+FROM orders
+WHERE order_date BETWEEN "2021-03-01" and "2021-07-31";
+
+
+-- Find the total sales and the number of orders, in one query. -- 
+SELECT 
+SUM(sales) as total_sales,
+COUNT(order_id) AS orders 
+FROM orders;
+
+-- Show the order with the highest sales, and the orders with sales of 15 or more, sorted by order_date.
+SELECT 
+*
+FROM orders
+WHERE sales >= 15
+ORDER BY order_date ASC;
+
+-- Create a table german_customers with the same columns as customers, then use INSERT INTO ... SELECT to copy in only the German customers.
+
+CREATE TABLE german_customers(
+	id INT PRIMARY KEY,
+	first_name VARCHAR(15) NOT NULL,
+	country VARCHAR(20),
+	score INT
+);
+
+select * from customers where country = 'Germany';
+
+INSERT INTO german_customers(id, first_name, country, score)
+SELECT 
+	id,
+	first_name,
+	country,
+	score
+	FROM customers
+WHERE country = 'Germany';
+
+-- UPDATE the score of customers with a score of 0 to 10, then check with SELECT.
+-- UPDATE customers
+-- SET score = 0, country = "UK"
+-- WHERE id = 9;
+
+UPDATE german_customers
+SET score = 10
+WHERE id = 4;
+
+-- DELETE one row from german_customers using WHERE, then TRUNCATE the table.
+DELETE FROM german_customers
+where id = 1;
+
+TRUNCATE TABLE german_customers;
+
+
+-- Customer 2’s first_name looks like it has a leading space ( John). 
+-- Try SELECT * FROM customers WHERE first_name = 'John'; 
+-- and see if it returns nothing, then fix it with TRIM(first_name).
+
+select * from customers where first_name = 'John';
+
+UPDATE customers
+SET first_name = 'John'
+WHERE id = 2;
+
+
+
+
+
+
+
+
+
+
 
 
 
