@@ -481,11 +481,115 @@ AND score BETWEEN 300 AND 600
 AND first_name NOT LIKE 'P%';
 
 
+-- Joins-- -- 
+SELECT 
+*
+FROM customers;
+
+SELECT 
+*
+FROM orders;
+
+SELECT 
+*
+FROM customers
+INNER JOIN orders
+ON id = customer_id;
+
+SELECT 
+*
+FROM customers AS c
+LEFT JOIN orders AS o
+ON c.id = o.customer_id;
+
+SELECT 
+*
+FROM orders AS o
+LEFT JOIN customers AS c
+ON o.customer_id = c.id;
+
+-- SELECT 
+-- *
+-- FROM customers AS c --> This can be done in Postgres, SQL server and orcale
+-- FULL JOIN orders AS o 
+-- ON c.id = o.customer_id;
+
+-- This is how we do full join in mysql 
+SELECT
+id,
+first_name,
+order_id,
+sales
+FROM customers AS c
+LEFT JOIN orders as o 
+ON c.id = o.customer_id
+UNION
+SELECT
+	id,
+	first_name,
+	order_id,
+	sales
+FROM customers AS c
+RIGHT JOIN orders as o 
+ON c.id = o.customer_id;
+
+
+-- Anti joins –- Left join
+
+SELECT 
+	id,
+	first_name,
+	order_id,
+    customer_id,
+	sales
+FROM customers AS c
+LEFT JOIN orders AS o
+ON c.id = o.customer_id
+WHERE o.customer_id is null;
+
+SELECT 
+	*
+FROM orders AS o 
+LEFT JOIN customers AS c
+ON o.customer_id = c.id
+WHERE c.id is null;
 
 
 
+-- FULL ANTI JOIN -- 
+SELECT
+id,
+first_name,
+order_id,
+sales
+FROM customers AS c
+LEFT JOIN orders as o 
+ON c.id = o.customer_id
+WHERE o.customer_id is null
+UNION
+SELECT
+	id,
+	first_name,
+	order_id,
+	sales
+FROM customers AS c
+RIGHT JOIN orders as o 
+ON c.id = o.customer_id
+WHERE c.id is null;
+
+SELECT 
+*
+FROM customers AS c
+INNER JOIN orders AS o
+ON c.id = o.customer_id;
 
 
+SELECT 
+*
+FROM customers AS c
+LEFT JOIN orders AS o
+ON c.id = o.customer_id
+WHERE o.customer_id is not null;
 
 
 
