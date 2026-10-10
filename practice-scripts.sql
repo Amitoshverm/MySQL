@@ -299,7 +299,6 @@ SELECT
 FROM orders
 WHERE order_date BETWEEN "2021-03-01" and "2021-07-31";
 
-
 -- Find the total sales and the number of orders, in one query. -- 
 SELECT 
 SUM(sales) as total_sales,
@@ -359,9 +358,127 @@ UPDATE customers
 SET first_name = 'John'
 WHERE id = 2;
 
+SELECT 
+*
+FROM customers
+WHERE country <> 'Germany';
+
+SELECT 
+*
+FROM customers
+WHERE score >= 500;
 
 
+-- AND -- 
+SELECT 
+*
+FROM customers
+WHERE score > 500 AND country = 'USA';
 
+-- OR -- 
+SELECT 
+*
+FROM customers
+WHERE country = 'USA' OR score > 500;
+
+-- NOT -- 
+SELECT 
+*
+FROM customers
+WHERE NOT score < 500;
+
+
+-- BETWEEN -- 
+SELECT 
+*
+FROM customers
+WHERE score BETWEEN 100 AND 500;   
+
+-- IN and NOT IN -- 
+-- this is preferred more as its clean -- 
+SELECT 
+*
+FROM customers
+WHERE country IN ('USA', 'Germany');
+
+SELECT 
+*
+FROM customers
+WHERE country = 'USA' OR country = 'Germany';
+
+
+SELECT 
+*
+FROM customers
+WHERE country NOT IN ('USA', 'Germany');
+
+
+-- LIKE -- 
+SELECT 
+* 
+FROM customers
+WHERE first_name LIKE 'M%';
+
+SELECT 
+*
+FROM customers
+WHERE first_name like '%n';
+
+SELECT 
+*
+FROM customers
+WHERE first_name LIKE '%r%';
+
+SELECT 
+*
+FROM customers
+WHERE first_name LIKE '__r%';
+
+SELECT 
+* 
+FROM customers
+WHERE score BETWEEN 400 AND 800;
+
+SELECT 
+* 
+FROM customers
+WHERE score >= 400 AND score <= 800;
+
+SELECT 
+*
+FROM orders 
+WHERE order_date BETWEEN '2021-04-01' AND '2021-08-31';
+
+SELECT 
+*
+FROM orders 
+WHERE order_date >= '2021-04-01' AND order_date <= '2021-08-31';
+
+
+SELECT 
+*
+FROM customers
+WHERE first_name like '%n';
+
+SELECT 
+*
+FROM customers
+WHERE first_name like '_r%';
+
+SELECT 
+*
+FROM customers
+WHERE country NOT IN('USA', 'Germany');
+
+-- Combine everything in one query: customers from Germany or USA, 
+-- with a score between 300 and 600, whose first_name doesn’t start with “P”.
+
+SELECT 
+*
+FROM customers
+WHERE country IN ('USA', 'Germany') 
+AND score BETWEEN 300 AND 600 
+AND first_name NOT LIKE 'P%';
 
 
 
