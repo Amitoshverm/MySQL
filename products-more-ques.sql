@@ -88,17 +88,181 @@ FROM Employees
 ORDER BY Department;
 
 -- B -- 
--- Show customers who are not from Germany.
+-- 1. Show customers who are not from Germany. -- 
+SELECT 
+*
+FROM Customers
+WHERE Country != 'Germany';
 
+-- 2. Show orders with Sales greater than 30.-- 
+SELECT 
+*
+FROM Orders
+WHERE Sales > 30;
 
+-- 3. Show employees in the Sales department with Salary of 75000 or more.-- 
+SELECT 
+*
+FROM Employees
+WHERE Department = 'Sales' AND Salary >= 75000;
 
+-- 4. Show customers who are from Germany or have a Score above 800.--  
+SELECT 
+*
+FROM Customers
+WHERE Country = 'Germany' OR Score > 800;
 
+-- 5. Show orders that are 'Shipped' and have Quantity greater than 1.
+SELECT 
+*
+FROM Orders
+WHERE OrderStatus = 'Shipped' AND Quantity > 1;
 
+-- 6. Show orders placed in February 2025, using BETWEEN.
+SELECT 
+*
+FROM Orders
+WHERE OrderDate BETWEEN '2025-02-01' AND '2025-02-28';
 
+SELECT 
+*
+FROM Orders
+WHERE OrderDate >= '2025-02-01' AND OrderDate <= '2025-02-28';
 
+-- 7. Show employees born between 1980-01-01 and 1989-12-31.
+SELECT 
+*
+FROM Employees 
+WHERE BirthDate BETWEEN '1980-01-01' AND '1989-12-31';
 
+-- 8. Show orders for ProductID in (101, 104). Then show the ones not in that list.
+SELECT 
+*
+FROM Orders
+WHERE ProductID IN (101, 104);
 
+SELECT 
+*
+FROM Orders
+WHERE ProductID NOT IN (101, 104);
 
+-- 9. Show customers whose FirstName starts with “M”, then customers whose FirstName has exactly 4 letters (hint: _).
+SELECT 
+*
+FROM Customers
+WHERE FirstName like 'M%';
+
+SELECT 
+*
+FROM Customers
+WHERE LENGTH(FirstName) = 4;
+
+-- 10. Show orders whose ShipAddress contains “Lane” or “Court”.--
+SELECT 
+* 
+FROM Orders
+WHERE ShipAddress LIKE '%LANE%' OR ShipAddress LIKE  '%Court%';
+
+-- C. NULL handling
+-- Show customers who have no LastName.
+SELECT 
+*
+FROM Customers
+WHERE LastName is null;
+
+-- Show customers who have a Score (not NULL).
+SELECT 
+*
+FROM Customers
+WHERE Score is not null;
+
+-- Count orders where BillAddress IS NULL, then count where BillAddress = ''. Why do the numbers differ?
+SELECT 
+COUNT(*) AS null_BillAddress
+FROM Orders
+WHERE BillAddress is null;
+
+SELECT 
+COUNT(*) AS null_BillAddress
+FROM Orders
+WHERE BillAddress = '';
+
+-- Show FirstName and Score from customers, displaying 0 instead of NULL (hint: COALESCE).
+SELECT 
+	FirstName,
+	coalesce(Score, 0)
+FROM Customers;
+
+-- Run WHERE Score <= 500 on customers. Does Anna appear? Explain why.
+SELECT
+*
+FROM Customers
+WHERE Score <= 500;
+-- Because Anna has score of null
+
+-- D. Aggregates, GROUP BY, HAVING
+-- Find the total Sales and the number of orders.
+
+SELECT
+	SUM(Sales) as total_Sales, 
+	SUM(OrderId) AS Total_number_of_orders
+FROM Orders;
+
+-- Find the average, minimum, and maximum Sales.
+SELECT 
+	AVG(Sales) as avg_sales,
+    MIN(Sales) as min_sales,
+    MAX(Sales) as max_sales
+FROM Orders;
+
+-- Count customers in each Country.
+SELECT 
+	Country,
+	Count(CustomerID) as total_customer
+FROM Customers
+GROUP BY Country;
+
+-- Find total Sales per CustomerID in orders, highest first.
+SELECT 
+	CustomerID,
+	SUM(Sales) as Total_sales
+FROM Orders
+GROUP BY CustomerID
+ORDER BY SUM(Sales) DESC;
+
+-- Find total Quantity per OrderStatus.
+SELECT 
+	OrderStatus,
+	SUM(Quantity) as total_quantity
+FROM Orders
+GROUP BY OrderStatus;
+
+-- Find the average Salary per Department.
+SELECT 
+	Department,
+	AVG(Salary) as avg_salary
+FROM Employees
+GROUP BY Department;
+select * from Employees;
+
+-- Find the ProductIDs that appear in more than 2 orders.
+
+SELECT 
+	ProductID,
+	COUNT(ProductID) AS Appeareance
+FROM Orders
+GROUP BY ProductID
+HAVING COUNT(ProductId) >= 2;
+
+-- Run COUNT(*), COUNT(Score), and COUNT(LastName) on customers in one query. Why do the results differ?
+SELECT 
+	COUNT(*),
+	COUNT(Score),
+	COUNT(LastName)
+FROM Customers
+-- what i think is * counts the total number of primary id, score counted which had values not nulls, same for lastname as well ignoring nulls
+
+-- E. DDL and DML
 
 
 
