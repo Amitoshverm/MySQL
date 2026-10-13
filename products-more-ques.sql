@@ -259,13 +259,179 @@ SELECT
 	COUNT(*),
 	COUNT(Score),
 	COUNT(LastName)
-FROM Customers
+FROM Customers;
 -- what i think is * counts the total number of primary id, score counted which had values not nulls, same for lastname as well ignoring nulls
 
 -- E. DDL and DML
+-- Create a table shipped_orders with OrderID, ProductID, CustomerID, Sales, 
+-- then use INSERT INTO ... SELECT to copy in only the shipped orders.
+select * from orders;
+CREATE TABLE shipped_orders(
+	OrderID INT NOT NULL,
+    ProductID INT NOT NULL,
+    CustomerID INT NOT NULL,
+    Sales INT
+);
+
+INSERT INTO shipped_orders(OrderID, ProductID, CustomerID, Sales)
+SELECT 
+	OrderID, 
+    ProductID, 
+    CustomerID, 
+    Sales
+FROM Orders 
+WHERE OrderStatus = 'Shipped';
+
+SELECT * FROM shipped_orders;
+
+-- In shipped_orders, increase Sales by 10% for ProductID 101.
+UPDATE shipped_orders
+SET Sales = (Sales / 10 ) + Sales
+WHERE ProductID = 101;
+
+-- In shipped_orders, delete rows where Sales is below 20.
+DELETE 
+FROM shipped_orders
+WHERE Sales < 20;
+
+-- Use ALTER TABLE to add a Notes VARCHAR(100) column to shipped_orders.
+ALTER TABLE shipped_orders
+ADD COLUMN Notes VARCHAR(100);
+
+-- Insert a new customer (6, ‘Peter’, ‘Hall’, ‘UK’, 0) using INSERT INTO ... VALUES.
+SELECT * FROM Customers;
+INSERT INTO Customers(CustomerID, FirstName, LastName, Country, Score)
+VALUES(6, 'Peter', 'Hall', 'UK', 0);
+
+-- Create high_earners (EmployeeID, FirstName, Salary), fill it with employees earning 65000 or more, 
+-- then TRUNCATE it, then DROP it. Explain what each step did.
+CREATE TABLE high_earners(
+	EmployeeID INT,
+    FirstName VARCHAR(20),
+    Salary INT
+);
+-- created table high_earners with column names and datatypes 
+
+INSERT INTO high_earners(EmployeeID, FirstName, Salary)
+SELECT 
+	EmployeeID, 
+	FirstName, 
+	Salary
+FROM Employees
+WHERE Salary >= 65000;
+-- then inserted the data from employees table which had equal to or more than 65000 salaries
+
+-- Show OrderID, FirstName, and Sales for every order (INNER JOIN orders and customers).
+SELECT 
+	o.OrderID, 
+    c.FirstName, 
+    o.Sales
+FROM Orders o 
+INNER JOIN Customers c
+ON o.CustomerID = c.CustomerID;
+
+-- Show all customers with their OrderID, keeping customers who have no orders.
+SELECT 
+c.*,
+o.OrderID
+FROM Customers AS c
+LEFT JOIN Orders AS o
+ON c.CustomerID = o.CustomerID;
+
+
+-- Find customers who have never placed an order (left anti join).
+SELECT 
+c.*
+FROM Customers AS c
+LEFT JOIN Orders AS o
+ON c.CustomerID = o.CustomerId
+WHERE o.OrderId is null;
+
+
+-- Find products that have never been ordered.
+SELECT 
+	p.Product,
+    COUNT(Quantity) as Quantity
+FROM Products p 
+LEFT JOIN Orders o 
+ON p.ProductID = o.ProductId
+GROUP BY Product
+HAVING Quantity = 0;
+
+-- Show each order with its product name and category, sorted by Sales.
+SELECT
+	o.*,
+	p.Product AS ProductName,
+	p.category
+FROM orders AS o
+LEFT JOIN Products AS p
+ON o.ProductID = p.ProductID
+ORDER BY Sales;
+
+-- Show each customer’s FirstName and total Sales, including customers with no orders (show 0 for them).
+SELECT 
+	c.FirstName,
+    coalesce(SUM(Sales) , 0) AS Total_Sales
+FROM Customers AS c
+LEFT JOIN Orders AS o 
+ON c.CustomerID = o.CustomerID
+GROUP BY FirstName;
+
+-- Show each order with the first name of the salesperson (SalesPersonID matches EmployeeID).
+SELECT 
+o.*,
+e.FirstName
+FROM Orders AS o
+LEFT JOIN Employees AS e
+ON o.SalesPersonID = e.EmployeeID;
+
+-- Stretch (self join): show each employee with their manager’s first name. Frank must still appear.
+SELECT 
+e.*,
+m.FirstName AS manager
+FROM Employees AS e
+LEFT JOIN Employees m
+ON e.ManagerID = m.EmployeeID;
+
+
+
+-- Find total Sales per product Category, only for categories above 100.
+SELECT 
+	p.Category,
+	SUM(o.Sales) AS TotalSales
+FROM Products AS p
+INNER JOIN Orders AS o
+ON p.ProductID = o.ProductID
+GROUP BY p.Category
+HAVING SUM(o.Sales) > 100;
 
 
 
 
 
 
+
+
+
+-- Show all USA customers with their delivered orders only, keeping USA customers who have none. 
+-- Try it with the condition in WHERE, then in ON, and compare.
+
+SELECT 
+c.*,
+o.OrderId
+FROM Customers AS c
+left JOIN Orders AS o
+ON c.CustomerId = o.CustomerId
+WHERE c.Country = 'USA' AND o.OrderStatus = 'Delivered';
+
+
+-- Find the salesperson (first name) with the highest total Sales.
+SELECT 
+e.FirstName,
+SUM(o.sales) AS TotalSales
+FROM Employees AS e
+INNER JOIN Orders AS o
+ON e.EmployeeID = o.SalesPersonID
+GROUP BY FirstName
+ORDER BY TotalSales DESC
+LIMIT 1;
