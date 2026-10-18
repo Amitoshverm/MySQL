@@ -56,6 +56,98 @@ LEFT(TRIM(first_name), 2),
 RIGHT (TRIM(first_name), 2)
 FROM customers;
 
+USE SalesDB;
+
+-- Show each customer’s full name as FullName (FirstName and LastName with a space between). What happens for Mary? Then fix it.
+select * from customers;
+
+SELECT 
+CONCAT(FirstName, ' ', coalesce(LastName, '')) AS FULL_NAME
+FROM Customers;
+
+
+-- Show each customer’s FirstName in upper case and Country in lower case.
+SELECT 
+UPPER(FirstName) AS FIRSTNAME,
+LOWER(Country) AS country
+FROM Customers;
+
+-- Show each customer’s FirstName and its length, longest name first.
+SELECT 
+FirstName, 
+LENGTH(FirstName) AS len_firstName
+FROM Customers
+ORDER BY LENGTH(FirstName) DESC;
+
+-- Show each product’s name with its first 3 letters and its last 2 letters as separate columns.
+SELECT
+LEFT(Product, 3) first_three,
+RIGHT(Product, 2) last_two
+FROM PRODUCTS;
+
+-- Show OrderID and ShipAddress with 'Court' replaced by 'Ct'.
+SELECT 
+OrderID,
+REPLACE(ShipAddress, 'Court', 'Ct') courtAsCt
+FROM Orders;
+
+-- Show OrderID and the house number from ShipAddress, meaning the text before the first space. 
+-- What do you get for the orders with no address?
+
+SELECT 
+*
+FROM ORDERS;
+
+
+-- Show each customer’s initials, like JG for Jossef Goldberg. Mary has no last name, so decide how to handle her.
+SELECT 
+CONCAT(coalesce(LEFT(FirstName, 1), ''),'', coalesce(LEFT(LastName, 1), '')) AS customer_initials
+FROM Customers;
+
+-- Show each employee’s email as lower-case firstname.lastname@company.com. 
+-- Mary has no last name, so make her email mary@company.com instead of NULL.
+SELECT 
+	CONCAT(
+    coalesce(LOWER(FirstName), ''), 
+	'.', 
+	coalesce(LOWER(LastName), ''), '@company.com'
+    ) as emp_email
+FROM Employees;
+
+-- Show OrderID and the length of BillAddress. What do you get for NULL rows compared with blank ('') rows, and why?
+
+SELECT 
+LENGTH(BillAddress)
+FROM Orders;
+-- at null position i get nulls and at blanks i get 0
+
+-- Count the customers per first letter of FirstName, and sort the result by the letter.-- 
+SELECT  
+	
+	(LEFT(FirstName, 1)) AS FirstLetter,
+    COUNT(LEFT(FirstName, 1)) 
+FROM Customers
+GROUP BY (LEFT(FirstName, 1))
+ORDER BY FirstLetter;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
