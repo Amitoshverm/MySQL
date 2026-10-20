@@ -66,5 +66,46 @@ SELECT
 ABS(-2),
 ABS(2);
 
+use SalesDb;
+
+-- 
+SELECT 
+OrderDate,
+ShipDate,
+CreationTime,
+TIME(NOW()) AS Today -- EXTRACTION OF DATE, YEAR, MONTH, TIME, MINUTE, SECOND, HOUR
+FROM Orders;
+
+
+-- EXTRACT YEAR FROM CREATION TIME
+SELECT 
+CreationTime,
+YEAR(CreationTime) AS Year_of_creation,
+MONTH(CreationTime) AS MONTH_of_creation,
+DAY(CreationTime) AS day_of_creation,
+HOUR(CreationTime) AS HOUR_of_creation,
+WEEK(CreationTime) AS WEEK_of_creation,
+-- EXTRACTION MORE
+DATE_FORMAT(CreationTime, '%D') AS DAY,
+DATE_FORMAT(CreationTime, '%M') AS MONTH,
+DATE_FORMAT(CreationTime, '%Y') AS YEAR
+FROM Orders;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
