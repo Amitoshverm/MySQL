@@ -130,10 +130,19 @@ FROM Customers
 GROUP BY (LEFT(FirstName, 1))
 ORDER BY FirstLetter;
 
+-- SUBSTRING()
+-- REMOVE FIRST LETTER FROM FIRSTNAME
 
+SELECT 
+	FirstName,
+	SUBSTRING(FirstName, 2, LENGTH(FirstName))
+FROM Customers;
 
-
-
+USE MyDatabase;
+SELECT 
+	First_name,
+	SUBSTRING(TRIM(First_name), 2, LENGTH(First_name))
+FROM Customers;
 
 
 
