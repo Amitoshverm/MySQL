@@ -1,0 +1,40 @@
+-- Case
+
+SELECT 
+	ORDERID, PRODUCTID, CUSTOMERID,SALES,
+    CASE
+		WHEN SALES > 50 THEN 'HIGH'
+		WHEN SALES > 30 THEN 'MID'
+		ELSE 'LOW'
+	END AS high_low
+FROM ORDERS;
+
+
+
+SELECT 
+*
+FROM ORDERS;
+
+SELECT 
+	ORDERID, 
+    PRODUCTID, 
+    CUSTOMERID,
+    SALES,
+    CASE
+		WHEN SALES > 50 THEN 'HIGH'
+        WHEN SALES > 20 THEN 'MID'
+        ELSE 'LOW'
+	END AS 'CATEGORY'
+FROM ORDERS
+ORDER BY SALES DESC;
+-- Rules with CASE Statements, when doing THEN return data types must be same accross WHEN AND ELSE 
+
+
+
+
+
+
+
+
+
+
