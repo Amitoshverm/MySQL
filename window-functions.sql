@@ -72,6 +72,74 @@ SELECT
 FROM Orders;
 
 
+-- RANK each order based on their sales from highest to lowest 
+-- additionally provide details such as orderID, orderDate
+SELECT 
+	OrderID,
+    OrderDate,
+    Sales,
+    RANK() OVER (ORDER BY Sales DESC) AS Rank_Sales
+FROM Orders;
+
+SELECT * FROM CUSTOMERS;
+SELECT 
+	CONCAT_WS(' ', FirstName, LastName) as FullName,
+    Country,
+    Score,
+    RANK() OVER(PARTITION BY Country ORDER BY SCORE DESC) AS Country_Rank
+FROM CUSTOMERS;
+
+
+SELECT 
+	OrderId,
+    ORderDate,
+    OrderStatus,
+    Sales,
+	SUM(Sales) OVER(PARTITION BY OrderStatus ORDER BY ORderDate 
+	ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING) AS TotalSalesByDateS
+FROM Orders;
+
+-- Total number of orders for each product 
+
+SELECT 
+	OrderID,
+	ProductID,
+	COUNT(*) OVER(PARTITION BY ProductId)
+FROM Orders;
+
+
+SELECT
+	OrderId,
+    OrderDate,
+    CustomerID,
+	COUNT(*) OVER() AS total_orders,
+	COUNT(*) OVER(PARTITION BY CustomerID) AS total_orders
+FROM Orders;
+
+
+SELECT
+	*,
+    COUNT(*) OVER() AS TOTALCUSTOMERS,
+	COUNT(Score) OVER() AS TotalScores
+FROM Customers;
+
+
+-- Check duplicate orders
+SELECT 
+*
+FROM (
+	SELECT
+		OrderID,
+		COUNT(*) OVER(PARTITION BY OrderID) AS CheckPK
+	FROM OrdersArchive
+)
+t WHERE CheckPK > 1;
+
+
+
+
+
+
 
 
 
